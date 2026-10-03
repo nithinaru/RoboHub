@@ -1,0 +1,107 @@
+/* Dia-like motion: slow eased rises, staggered entrance, lift on hover. Transform and opacity only. */
+:root {
+  --dia: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dia-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes dia-wash {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to { transform: translate3d(3%, 2%, 0) scale(1.06); }
+}
+
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  background: radial-gradient(circle at 40% 35%, rgba(241, 207, 138, 0.22), transparent 46%);
+  animation: dia-wash 22s var(--dia) infinite alternate;
+  pointer-events: none;
+}
+
+.wordmark,
+.hero-tag { animation: dia-rise 0.9s var(--dia) both; }
+.hero-tag:last-child { animation-delay: 0.06s; }
+
+.hero-copy { animation: dia-rise 1.15s var(--dia) 0.1s both; }
+.composer { animation: dia-rise 1.2s var(--dia) 0.22s both; }
+
+.bar {
+  transition: transform 0.55s var(--dia), box-shadow 0.55s var(--dia);
+}
+.bar:focus-within { transform: translateY(-4px); }
+
+.chips .chip {
+  animation: dia-rise 0.85s var(--dia) both;
+  transition: transform 0.45s var(--dia), color 0.3s ease, box-shadow 0.45s var(--dia);
+}
+.chips .chip:nth-child(1) { animation-delay: 0.34s; }
+.chips .chip:nth-child(2) { animation-delay: 0.42s; }
+.chips .chip:nth-child(3) { animation-delay: 0.5s; }
+.chips .chip:hover { transform: translateY(-2px); }
+
+.cta,
+.mic {
+  transition: transform 0.45s var(--dia), filter 0.45s ease, background 0.45s ease, color 0.45s ease;
+}
+.cta:hover,
+.mic:hover { transform: translateY(-1px) scale(1.03); }
+.cta:active,
+.mic:active { transform: translateY(0) scale(0.98); }
+
+.gpu-seg button {
+  transition: transform 0.4s var(--dia), color 0.3s ease, background 0.4s var(--dia);
+}
+.gpu-seg button:hover { transform: translateY(-1px); }
+.gpu-seg button[aria-checked="true"] { transform: none; }
+
+.fleet { animation: dia-rise 0.95s var(--dia) both; }
+.grid .tile {
+  animation: dia-rise 0.7s var(--dia) both;
+}
+.grid .tile:nth-child(1) { animation-delay: 0.04s; }
+.grid .tile:nth-child(2) { animation-delay: 0.08s; }
+.grid .tile:nth-child(3) { animation-delay: 0.12s; }
+.grid .tile:nth-child(4) { animation-delay: 0.16s; }
+.grid .tile:nth-child(5) { animation-delay: 0.2s; }
+.grid .tile:nth-child(6) { animation-delay: 0.24s; }
+.grid .tile:nth-child(7) { animation-delay: 0.28s; }
+.grid .tile:nth-child(8) { animation-delay: 0.32s; }
+
+.tile.is-film {
+  transition: transform 0.5s var(--dia), box-shadow 0.5s var(--dia);
+}
+.tile.is-film:hover { transform: translateY(-6px); }
+
+.sheet-backdrop { animation: fade 0.45s var(--dia); }
+.sheet-panel { animation: dia-rise 0.6s var(--dia); }
+
+.foot { animation: dia-rise 1s var(--dia) 0.3s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-media::after,
+  .wordmark,
+  .hero-tag,
+  .hero-copy,
+  .composer,
+  .chips .chip,
+  .fleet,
+  .grid .tile,
+  .foot,
+  .sheet-panel,
+  .sheet-backdrop,
+  .hero-img {
+    animation: none;
+  }
+  .bar,
+  .cta,
+  .mic,
+  .chips .chip,
+  .gpu-seg button,
+  .tile.is-film {
+    transition: none;
+  }
+}
