@@ -2,6 +2,8 @@
 
 **RoboHub: Text-to-Policy Engine for Physical AI with Supabase and MuJoCo.**
 
+**Live site:** https://robohub-azure.vercel.app
+
 **Type one sentence. Runway films people doing the task, physics throws out every clip a robot shouldn't learn
 from, and a vision-language-action model (SmolVLA) learns the skill on a rented GPU for under $10.**
 
