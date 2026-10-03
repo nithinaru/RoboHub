@@ -1,49 +1,79 @@
-// Shared helpers for the live Runway path (Vercel functions). Bring your own key: every call uses the visitor's
-// Runway API key from the X-Runway-Key header. It is forwarded to Runway only, never stored or logged.
-const BASE = "https://api.dev.runwayml.com/v1";
-const VERSION = "2024-11-06";
-const PER_IP = 12; // calls per visitor per 10 minutes (per warm instance)
+// Gemini lead: a still from Gemini, then Veo image-to-video. The visitor's key is forwarded to Google and never stored.
+const BASE = "https://generativelanguage.googleapis.com/v1beta";
+const IMAGE_MODEL = "gemini-3.1-flash-image-preview";
+const VEO_FAST = "veo-3.1-fast-generate-preview";
+const VEO = "veo-3.1-generate-preview";
+const PER_IP = 12;
 const hits = new Map();
 
 const fail = (msg, code) => Object.assign(new Error(msg), { code });
 
 function keyOf(req) {
-  const k = String(req.headers["x-runway-key"] || "").trim();
-  if (!k) throw fail("Add your Runway API key to generate new prompts.", 401);
-  if (!/^key_[A-Za-z0-9_-]{16,300}$/.test(k)) throw fail("That doesn't look like a Runway API key (it starts with key_).", 401);
+  const k = String(req.headers["x-gemini-key"] || "").trim();
+  if (!k) throw fail("Add your Gemini API key to generate new prompts.", 401);
+  if (!/^AIza[A-Za-z0-9_-]{20,}$/.test(k)) throw fail("That doesn't look like a Gemini API key (it starts with AIza).", 401);
   return k;
 }
 
-async function runway(key, method, path, body) {
-  const r = await fetch(BASE + path, {
+function veoModel(budget) {
+  const usd = [2, 4, 6, 8, 10].includes(Number(budget)) ? Number(budget) : 2;
+  return usd >= 6 ? VEO : VEO_FAST;
+}
+
+async function google(key, path, { method = "GET", body } = {}) {
+  const r = await fetch(path.startsWith("http") ? path : `${BASE}/${path.replace(/^\//, "")}`, {
     method,
-    headers: { Authorization: `Bearer ${key}`, "X-Runway-Version": VERSION, "Content-Type": "application/json" },
+    headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
   });
   const j = await r.json().catch(() => ({}));
-  if (r.status === 401 || r.status === 403) throw fail("Runway rejected this API key.", 401);
-  if (!r.ok) throw fail(j.error || j.message || `Runway HTTP ${r.status}`, r.status === 400 || r.status === 404 ? r.status : 502);
+  if (r.status === 401 || r.status === 403) throw fail("Gemini rejected this API key.", 401);
+  if (!r.ok) throw fail(j.error?.message || `Gemini HTTP ${r.status}`, r.status === 400 ? 400 : 502);
   return j;
 }
 
-// budget routing (same as route.js): a run is 5 clips; every budget is a quality-optimized Model Router whose price
-// ceiling is (budget / 5 clips) credits a clip, created on the visitor's account the first time it is used
-const BUDGETS = [2, 4, 6, 8, 10], CLIPS = 5;
+async function still(key, prompt) {
+  const j = await google(key, `models/${IMAGE_MODEL}:generateContent`, {
+    method: "POST",
+    body: {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseModalities: ["IMAGE"] },
+    },
+  });
+  const parts = j.candidates?.[0]?.content?.parts || [];
+  const inline = parts.map((p) => p.inlineData || p.inline_data).find(Boolean);
+  if (!inline?.data) throw fail("Gemini returned no first frame.", 502);
+  return { b64: inline.data, mime: inline.mimeType || inline.mime_type || "image/png", model: IMAGE_MODEL };
+}
+
+async function startVideo(key, { prompt, b64, mime, budget }) {
+  const model = veoModel(budget);
+  const j = await google(key, `models/${model}:predictLongRunning`, {
+    method: "POST",
+    body: {
+      instances: [{
+        prompt,
+        image: { inlineData: { mimeType: mime || "image/png", data: b64 } },
+      }],
+      parameters: { aspectRatio: "16:9", durationSeconds: 8 },
+    },
+  });
+  if (!j.name) throw fail("Veo did not start a video job.", 502);
+  return { name: j.name, model };
+}
+
+function operationStatus(j) {
+  if (j.error) return { status: "FAILED", failure: j.error.message || "Veo failed", output: null, progress: null };
+  if (!j.done) return { status: "RUNNING", progress: 0.5, output: null, failure: null };
+  const uri = j.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+  if (!uri) return { status: "FAILED", failure: "Veo finished without a video.", output: null, progress: 1 };
+  return { status: "SUCCEEDED", progress: 1, output: [uri], failure: null };
+}
+
+const BUDGETS = [2, 4, 6, 8, 10];
 function decide(_task, budget) {
   const usd = BUDGETS.includes(Number(budget)) ? Number(budget) : 2;
-  const ceiling = Math.round((usd * 100) / CLIPS);
-  return { router: `robohub-q${ceiling}`, budget: usd, ceiling, reasons: [`best quality up to ${ceiling} credits a clip`] };
-}
-async function ensureRouter(key, router, ceiling) {
-  const have = await runway(key, "GET", "/routers");
-  if ((have.data || []).some((r) => r.slug === router)) return router;
-  const made = await runway(key, "POST", "/routers", {
-    slug: router,
-    name: router,
-    description: `RoboHub demonstrations: best quality at up to ${ceiling} credits a clip`,
-    settings: { schemaVersion: 1, models: { mode: "allow_new_except", ids: [] }, optimizeFor: "quality", maxCreditsPerGeneration: { video: ceiling }, fallback: { onCapacity: true } },
-  });
-  return made.slug || router;
+  return { budget: usd, model: veoModel(usd), reasons: [`Gemini ${veoModel(usd)}`] };
 }
 
 function clean(prompt) {
@@ -54,8 +84,6 @@ function clean(prompt) {
   return p;
 }
 
-// PhyT2V-style positive phrasing, generalized from plan.py's v1 prompts. A run makes 3 demonstration clips; each
-// variant restyles the scene (table, light, camera angle, like plan.py's variation axes) so the clips differ.
 const SCENES = [
   { table: "a plain light oak wooden tabletop", light: "Soft natural daylight from a window on the left", angle: "three-quarter view from slightly above" },
   { table: "a matte white laminate desk", light: "Warm late-afternoon sunlight with long soft shadows", angle: "front view from slightly to the left, about 35 degrees down" },
@@ -85,11 +113,14 @@ function limit(req) {
   recent.push(now); hits.set(ip, recent);
 }
 
-const isId = (s) => /^[0-9a-f-]{36}$/i.test(String(s || ""));
+const isOp = (s) => /^models\/[A-Za-z0-9._-]+\/operations\/[A-Za-z0-9_-]+$/.test(String(s || ""));
 
 function send(res, fn) {
   res.setHeader("Cache-Control", "no-store");
   return fn().then((b) => res.status(200).json(b)).catch((e) => res.status(e.code || 500).json({ error: e.message }));
 }
 
-module.exports = { keyOf, runway, decide, ensureRouter, clean, imagePrompt, variantOf, SCENES, videoPrompt, limit, isId, send };
+module.exports = {
+  keyOf, google, still, startVideo, operationStatus, veoModel, decide, clean,
+  imagePrompt, variantOf, videoPrompt, limit, isOp, send, IMAGE_MODEL,
+};

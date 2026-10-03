@@ -16,15 +16,14 @@
   const FOOTAGE = 3; // Runway demonstration clips generated for every new prompt before its preview
   const FRAME_CREDITS = 5; // gen4_image first frame, 720p
   const DRY_FALLBACK = {
-    "demo-cheap": { model: "gen4_turbo", provider: "runway", credits: 25 },
-    "demo-fast": { model: "seedance2_fast", provider: "bytedance", credits: 145 },
-    "demo-best": { model: "seedance2_5", provider: "bytedance", credits: 150 },
-    // quality routers with a price ceiling (Runway dry runs, 2026-09-30)
-    "robohub-q40": { model: "gen4_turbo", provider: "runway", credits: 25 },
-    "robohub-q80": { model: "gemini_omni_flash", provider: "google", credits: 51 },
-    "robohub-q120": { model: "gemini_omni_flash", provider: "google", credits: 51 },
-    "robohub-q160": { model: "gemini_omni_flash_1.1", provider: "google", credits: 51 },
-    "robohub-q200": { model: "seedance2_5", provider: "bytedance", credits: 150 },
+    "demo-cheap": { model: "veo-3.1-fast-generate-preview", provider: "google" },
+    "demo-fast": { model: "veo-3.1-fast-generate-preview", provider: "google" },
+    "demo-best": { model: "veo-3.1-generate-preview", provider: "google" },
+    "robohub-q40": { model: "veo-3.1-fast-generate-preview", provider: "google" },
+    "robohub-q80": { model: "veo-3.1-fast-generate-preview", provider: "google" },
+    "robohub-q120": { model: "veo-3.1-generate-preview", provider: "google" },
+    "robohub-q160": { model: "veo-3.1-generate-preview", provider: "google" },
+    "robohub-q200": { model: "veo-3.1-generate-preview", provider: "google" },
   };
 
   const input = $("#prompt");
@@ -65,7 +64,7 @@
     $("#route-label").textContent = name;
     line.classList.toggle("is-no", !!note);
     line.innerHTML = note ? esc(note)
-      : `<b>${esc(name)}</b> a run: ${esc((r.reasons || []).join(", "))} · picks <b>${esc(dry.model)}</b> at ${esc(dry.credits)} credits · ${FOOTAGE} clips ≈ $${(((dry.credits + FRAME_CREDITS) * FOOTAGE) / 100).toFixed(2)}`;
+      : `<b>${esc(name)}</b> a run: Gemini <b>${esc(dry.model || "Veo")}</b> · ${FOOTAGE} clips on your key`;
   }
   async function route() {
     const seq = ++routeSeq;
@@ -375,7 +374,7 @@
     M.t0 = 0; M.seconds = 0; clearInterval(M.timer);
     const tick = () => { if (RUN !== myRun) return; const f = T ? Math.min(1, (performance.now() - t0) / T) : 1; M.seconds = R.seconds * f; paintTime(); if (f < 1 && state.running) requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
-    status("Runway generating · recorded run"); t.set("gen"); await wait_(1600);
+    status("Gemini generating · recorded run"); t.set("gen"); await wait_(1600);
     status("Physics check · 21 gates in MuJoCo"); t.set("physics"); await wait_(1800);
     t.set("ok"); await wait_(700);
     status(`SmolVLA training on ${R.episodes} episodes`); t.set("train");
@@ -390,11 +389,11 @@
   // ---------- cloud: a new sentence is generated live by Runway (Vercel functions in api/cloud) ----------
   //   a sentence that matches a finished task replays it; anything else: route -> gen4_image first frame -> Model Router video
   // bring your own key: on the hosted site new prompts run on the visitor's Runway credits; the key stays in this browser
-  const KEY = "robohub.runwayKey", keyRow = $("#key-row"), keyIn = $("#rw-key");
+  const KEY = "robohub.geminiKey", keyRow = $("#key-row"), keyIn = $("#rw-key");
   try { keyIn.value = localStorage.getItem(KEY) || ""; } catch {}
   keyIn.addEventListener("input", () => { keyRow.classList.remove("need"); try { localStorage.setItem(KEY, keyIn.value.trim()); } catch {} });
   ready.then(() => { keyRow.hidden = state.backend; });
-  const withKey = (opt = {}) => ({ ...opt, headers: { ...(opt.headers || {}), "X-Runway-Key": keyIn.value.trim() } });
+  const withKey = (opt = {}) => ({ ...opt, headers: { ...(opt.headers || {}), "X-Gemini-Key": keyIn.value.trim() } });
   const cpost = (url, data) => getJSON(url, withKey({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }));
   const norm = (s) => String(s || "").toLowerCase().replace(/\s+/g, " ").trim().replace(/[.!]+$/, "");
   let libSet = null;
@@ -408,13 +407,13 @@
     for (let i = 0; i < 200; i++) {
       await wait(i < 3 ? 2500 : 4000);
       const r = await getJSON(`/api/cloud/task?id=${encodeURIComponent(id)}`, withKey());
-      if (r.status === 401) throw new Error((r.body && r.body.error) || "Runway rejected this API key.");
+      if (r.status === 401) throw new Error((r.body && r.body.error) || "Gemini rejected this API key.");
       if (!r.ok) continue;
       if (r.body.status === "SUCCEEDED") return r.body.output && r.body.output[0];
-      if (r.body.status === "FAILED" || r.body.status === "CANCELLED") throw new Error(r.body.failure || "Runway could not make this clip.");
+      if (r.body.status === "FAILED" || r.body.status === "CANCELLED") throw new Error(r.body.failure || "Gemini could not make this clip.");
       onTick(r.body);
     }
-    throw new Error("Runway is taking too long; try again.");
+    throw new Error("Gemini is taking too long; try again.");
   }
   const errOf = (r, fallback) => (r.body && (r.body.error || r.body.detail || r.body.reason)) || fallback;
 
@@ -445,14 +444,14 @@
       if (stopped) return;
       const left = Math.max(0, Math.ceil(MIN_LOAD_MS / 1000 - R.elapsed()));
       const ok = C.filter((c) => c.end === "ok").length, bad = C.filter((c) => c.end === "fail").length;
-      if (keyless) { T.set("gen", `no Runway key · preview in ${left} s`, "Preparing preview"); return; }
+      if (keyless) { T.set("gen", `no Gemini key · preview in ${left} s`, "Preparing preview"); return; }
       if (ok + bad < n) {
         const pct = Math.round((100 * C.reduce((s, c) => s + (c.end ? 1 : 0.25 * Math.min(1, c.frame) + 0.75 * Math.min(1, c.video)), 0)) / n);
         const framing = C.some((c) => !c.end && c.frame < 1);
         T.set("gen", `${framing ? "first frames" : "clip videos"} · ${ok}/${n} done · ${pct}%${bad ? ` · ${bad} failed` : ""}`,
-          ok ? `Runway · ${ok}/${n} done · ${pct}%` : "Runway generating");
+          ok ? `Gemini · ${ok}/${n} done · ${pct}%` : "Gemini generating");
       } else {
-        T.set("gen", `${ok}/${n} Runway clips${bad ? ` · ${bad} failed` : ""} · preview in ${left} s`, left ? `MuJoCo preview in ${left} s` : "Building MuJoCo preview");
+        T.set("gen", `${ok}/${n} Gemini clips${bad ? ` · ${bad} failed` : ""} · preview in ${left} s`, left ? `MuJoCo preview in ${left} s` : "Building MuJoCo preview");
       }
     }
     const timer = setInterval(paint, 500); paint();
@@ -477,12 +476,14 @@
     try {
       const s = await cpost("/api/cloud/start", { prompt: text, budget: Route.budget, variant: i });
       if (!s.ok) { if (s.status === 401) keyRow.classList.add("need"); throw new Error(errOf(s, "Live generation is unavailable right now.")); }
-      await poll(s.body.image_task, (b) => R.clip(i, { frame: Math.min(0.95, b.progress || 0) }));
       R.clip(i, { frame: 1 });
-      const v = await cpost("/api/cloud/video", { prompt: s.body.task, image_task: s.body.image_task, budget: Route.budget });
-      if (!v.ok) throw new Error(errOf(v, "The router refused this clip."));
+      const v = await cpost("/api/cloud/video", { prompt: s.body.task, image_b64: s.body.image_b64, mime: s.body.mime, budget: Route.budget });
+      if (!v.ok) throw new Error(errOf(v, "Veo refused this clip."));
       const model = v.body.model || dry.model;
-      const url = await poll(v.body.video_task, (b) => R.clip(i, { video: Math.min(0.95, b.progress || 0) }));
+      const uri = await poll(v.body.video_task, (b) => R.clip(i, { video: Math.min(0.95, b.progress || 0) }));
+      const file = await fetch(`/api/cloud/media?uri=${encodeURIComponent(uri)}`, withKey());
+      if (!file.ok) throw new Error("Could not download the Gemini clip.");
+      const url = URL.createObjectURL(await file.blob());
       R.add(i, url, model, v.body.credits ?? null);
       return { ok: true, url, model };
     } catch (e) {
@@ -502,14 +503,14 @@
       const R = runTile(0, true);
       keyRow.hidden = false; keyRow.classList.add("need");
       line.classList.add("is-no");
-      line.textContent = `The ${FOOTAGE} Runway demonstration clips need a Runway API key: add yours below. The scripted MuJoCo preview is made in your browser.`;
+      line.textContent = `The ${FOOTAGE} Gemini clips need a Gemini API key: add yours below. The scripted MuJoCo preview is made in your browser.`;
       await R.gate(Promise.resolve());
       await showPreview(text, R, "no Runway footage: add a key");
       timeStop(); status("", true);
       return;
     }
     const R = runTile(FOOTAGE, false, instant ? state.pvTile : undefined);
-    status(`Runway generating · ${FOOTAGE} clips · ${name} budget`);
+    status(`Gemini generating · ${FOOTAGE} clips · ${name} budget`);
     const all = Promise.all(Array.from({ length: FOOTAGE }, (_, i) => cloudClip(text, i, R, dry)));
     const res = instant ? await all : await R.gate(all);
     const ok = res.filter((r) => r.ok);

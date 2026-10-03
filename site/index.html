@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>RoboHub</title>
-  <meta name="description" content="Robot training from a sentence. Runway films the demos, MuJoCo checks the physics, SmolVLA learns the task.">
+  <meta name="description" content="Robot training from a sentence. Gemini films the demos, MuJoCo checks the physics, SmolVLA learns the task.">
   <meta name="theme-color" content="#07090c">
   <meta name="color-scheme" content="dark">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2307090c'/%3E%3Crect x='14' y='30' width='16' height='16' fill='%23ba483a'/%3E%3Crect x='34' y='18' width='16' height='28' fill='%23c4963e'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="site.css?v=15">
   <script src="route.js?v=11" defer></script>
   <script src="preview.js?v=15" defer></script>
@@ -28,12 +28,12 @@
       </header>
 
       <div class="hero-copy">
-        <h1 class="title">I don't have a robotics lab.<br><em>So Runway films the demos.</em></h1>
+        <h1 class="title">I don't have a robotics lab.<br><em>So Gemini films the demos.</em></h1>
       </div>
 
       <form class="composer" id="composer" autocomplete="off">
         <div class="bar">
-          <div class="route-pill is-empty" id="route-pill" role="status" aria-live="polite" title="Your budget picks the Runway Model Router: best quality under a price ceiling">
+          <div class="route-pill is-empty" id="route-pill" role="status" aria-live="polite" title="Your budget picks Veo Fast or Veo 3.1">
             <span class="robot-dot"></span><span id="route-label"></span>
           </div>
           <label class="sr-only" for="prompt">What should the robot learn?</label>
@@ -48,16 +48,16 @@
           <span class="gpu-hint" id="gpu-hint" aria-live="polite"></span>
           </div>
 
-          <div class="gpu" title="What one run (5 Runway clips) may cost. Every option is a quality-optimized Model Router with that price ceiling.">
+          <div class="gpu" title="What one run may spend. $2 and $4 use Veo 3.1 Fast. $6 and above use Veo 3.1.">
             <span class="gpu-label" id="budget-label">Budget / run</span>
             <div class="gpu-seg" id="budget-seg" role="radiogroup" aria-labelledby="budget-label"></div>
           </div>
         </div>
         <div class="key-row" id="key-row" hidden>
-          <label class="gpu-label" for="rw-key">Runway API key</label>
-          <input class="key-input" id="rw-key" type="password" placeholder="key_..." autocomplete="off" spellcheck="false">
-          <span class="key-hint">New prompts run on your own Runway credits. The key goes straight to Runway and is kept only in this browser. <a href="https://dev.runwayml.com" target="_blank" rel="noopener">Get a key</a></span>
-          <span class="key-need">The 3 Runway demonstration clips for a new prompt need your key.</span>
+          <label class="gpu-label" for="rw-key">Gemini API key</label>
+          <input class="key-input" id="rw-key" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
+          <span class="key-hint">New prompts run on your Gemini key. Veo films the clip. The key stays in this browser and goes only to Google. <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a key</a></span>
+          <span class="key-need">The 3 demonstration clips for a new prompt need your Gemini key.</span>
         </div>
         <div class="chips" id="chips">
           <button type="button" class="chip" data-text="put the red block in the bowl">put the red block in the bowl</button>
@@ -88,8 +88,8 @@
         <a class="cta ov-dl" id="ov-dl" aria-disabled="true" rel="noopener">Download VLA</a>
         <a class="ov-jump" id="ov-jump" href="#ov-gallery" hidden></a>
       </aside>
-      <section class="ov-gallery" id="ov-gallery" hidden aria-label="Every Runway clip for this task">
-        <div class="ov-gh"><h3 class="ov-h">Every Runway clip for this task</h3><p class="ov-gsum" id="ov-gsum"></p></div>
+      <section class="ov-gallery" id="ov-gallery" hidden aria-label="Every generated clip for this task">
+        <div class="ov-gh"><h3 class="ov-h">Every generated clip for this task</h3><p class="ov-gsum" id="ov-gsum"></p></div>
         <ul class="ov-grid" id="ov-grid"></ul>
       </section>
       <button type="button" class="close" id="sheet-close" aria-label="Close">
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <footer class="foot"><p>Runway Model Router · MuJoCo physics · SO-101 · SmolVLA · simulated</p></footer>
+  <footer class="foot"><p>Gemini Veo · MuJoCo physics · SO-101 · SmolVLA · simulated</p></footer>
   <div class="grain" aria-hidden="true"></div>
 </body>
 </html>

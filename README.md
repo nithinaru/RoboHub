@@ -4,7 +4,7 @@
 
 **Live site:** https://robohub-azure.vercel.app
 
-**Type one sentence. Runway films people doing the task, physics throws out every clip a robot shouldn't learn
+**Type one sentence. Gemini films a person doing the task, physics throws out every clip a robot shouldn't learn
 from, and a vision-language-action model (SmolVLA) learns the skill on a rented GPU for under $10.**
 
 A video model films a person doing the task. Physics throws out every clip a robot should not learn from. SmolVLA trains on what remains, for a low-cost SO-101 arm. Supabase stores the task, every gate verdict, the dataset, and the checkpoint.
@@ -202,15 +202,13 @@ physics verdict, rejected ones included.
 
 ### Hosted: bring your own Runway key
 
-On the live site the finished tasks play for free. A new sentence runs on **your own
-Runway credits**: paste a Runway API key under the prompt. The key stays in your browser (localStorage) and is sent
-only to Runway, through three Vercel functions in `site/api/cloud/` (`start`, `task`, `video`). They draw the
-first frame with gen4_image, create the five `robohub-q*` routers on your account the first time you use them,
-and animate the frame through the router for your budget. The hosted site generates the Runway clip live; the
-physics gates, retargeting and SmolVLA training need the local pipeline below. Every Train, key or no key, first
-shows a scripted MuJoCo preview of the sentence generated in your browser (`site/preview.js`: MuJoCo WebAssembly
-and three.js, no server); it is scripted motion, not a learned policy. Gate telemetry for a connected Supabase
-project is on `/console/`.
+On the live site the finished tasks play for free. A new sentence runs on **your Gemini API key**:
+paste it under the prompt. The key stays in this browser and is sent only to Google, through `site/api/cloud/`
+(`start`, `video`, `task`, `media`). Gemini draws the first frame. Veo 3.1 Fast animates it under a $4 budget,
+and Veo 3.1 animates it at $6 and above. The hosted site generates that clip live; the physics gates, retargeting
+and SmolVLA training need the local pipeline below. Every Train, key or no key, first shows a scripted MuJoCo
+preview of the sentence in the browser (`site/preview.js`: MuJoCo WebAssembly and three.js, no server); it is
+scripted motion, not a learned policy. Gate telemetry for a connected Supabase project is on `/console/`.
 
 ### Local: the whole pipeline
 
@@ -220,7 +218,7 @@ API key for GPU training.
 ```bash
 uv sync
 cp .env.example .env   # SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
-security add-generic-password -s RUNWAY_API_KEY -a "$USER" -w     # macOS Keychain (prompts for the key)
+security add-generic-password -s GEMINI_API_KEY -a "$USER" -w      # macOS Keychain (prompts for the key)
 security add-generic-password -s RUNPOD_API_KEY -a "$USER" -w
 bin/robohub serve                                              # http://127.0.0.1:8765
 ```

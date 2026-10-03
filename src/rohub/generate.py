@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from . import runway
+from . import gemini, runway
 from .plan import Mismatch, Task, Variant, as_dict, variants
 
 REPO = runway.REPO
@@ -47,6 +48,9 @@ def frame_body(v: Variant, base: Path | None, seed: int) -> dict:
 
 
 def first_frame(v: Variant, base: Path | None, seed: int, on_status=None) -> Path:
+    if os.environ.get("GEMINI_API_KEY"):
+        prompt = v.image_prompt if base is None else v.restyle_prompt
+        return gemini.image_file(prompt, seed, on_status=on_status, reference=base)
     body = frame_body(v, base, seed)
     return runway.generate(
         "text_to_image", body, ".png", f"{v.clip_id} first frame", on_status=on_status
@@ -65,6 +69,9 @@ def video_body(v: Variant, frame: Path, seed: int) -> dict:
 
 
 def animate(v: Variant, frame: Path, seed: int, on_status=None) -> Path:
+    if os.environ.get("GEMINI_API_KEY"):
+        path, _routing = gemini.video_file(v.video_prompt, frame, seed, on_status=on_status)
+        return path
     body = video_body(v, frame, seed)
     return runway.generate(
         "image_to_video", body, ".mp4", f"{v.clip_id} video", on_status=on_status
@@ -81,15 +88,15 @@ def route(v: Variant, frame: Path, router: str, on_status=None, max_credits=None
 
 
 def _record(v: Variant, i: int, img: Path, vid: Path, clips_dir: Path, routing: dict | None = None,
-            clip_id: str | None = None) -> dict:
+            clip_id: str | None = None, image_model: str | None = None, video_model: str | None = None) -> dict:
     cid = clip_id or v.clip_id
     shutil.copy(img, clips_dir / f"{cid}.png")
     shutil.copy(vid, clips_dir / f"{cid}.mp4")
     rec = {
         **as_dict(v),
         "clip_id": cid,
-        "image_model": "gen4_image" if i == 0 else "gen4_image_turbo",
-        "video_model": routing["model"] if routing else "gen4_turbo",
+        "image_model": image_model or ("gen4_image" if i == 0 else "gen4_image_turbo"),
+        "video_model": video_model or (routing["model"] if routing else "gen4_turbo"),
         "first_frame": f"clips/{cid}.png",
         "video": f"clips/{cid}.mp4",
     }
@@ -218,7 +225,7 @@ def generate(
         )
 
     def one(i: int, v: Variant, base: Path | None) -> tuple[dict, Path]:
-        im = "gen4_image" if base is None else "gen4_image_turbo"
+        im = gemini.IMAGE_MODEL if os.environ.get("GEMINI_API_KEY") else ("gen4_image" if base is None else "gen4_image_turbo")
         img = first_frame(v, base, seed0 + i, status(v.clip_id, "frame", im))
         shutil.copy(img, clips_dir / f"{v.clip_id}.png")
         emit(
@@ -226,12 +233,13 @@ def generate(
         )
         if router:
             vid, routing = route(v, img, router, status(v.clip_id, "video", f"router:{router}"))
-            rec = _record(v, i, img, vid, clips_dir, routing)
+            rec = _record(v, i, img, vid, clips_dir, routing, image_model=im)
             emit({"type": "routed", "clip": v.clip_id, **{k: routing.get(k) for k in (
                 "router", "model", "provider", "estimated_credits", "realized_credits", "seconds", "cached")}})
         else:
-            vid = animate(v, img, seed0 + i, status(v.clip_id, "video", "gen4_turbo"))
-            rec = _record(v, i, img, vid, clips_dir)
+            video_model = gemini.model_for_budget(os.environ.get("ROBOHUB_BUDGET")) if os.environ.get("GEMINI_API_KEY") else "gen4_turbo"
+            vid = animate(v, img, seed0 + i, status(v.clip_id, "video", video_model))
+            rec = _record(v, i, img, vid, clips_dir, image_model=im, video_model=video_model)
         emit({"type": "clip_ready", "clip": v.clip_id, "file": rec["video"]})
         print(f"[generate] {v.clip_id} ready", flush=True)
         return rec, img

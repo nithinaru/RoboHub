@@ -1,5 +1,6 @@
 {
   "framework": null,
+  "functions": { "api/cloud/*.js": { "maxDuration": 60 } },
   "cleanUrls": false,
   "headers": [{ "source": "/runs/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }]
 }

@@ -44,6 +44,16 @@ def _gate_ids() -> set[str]:
     return found
 
 
+def test_gemini_budget_picks_veo_tier():
+    from rohub.gemini import VEO, VEO_FAST, model_for_budget
+
+    assert model_for_budget(2) == VEO_FAST
+    assert model_for_budget(4) == VEO_FAST
+    assert model_for_budget(6) == VEO
+    assert model_for_budget(10) == VEO
+    assert model_for_budget(None) == VEO_FAST
+
+
 def test_twenty_one_gate_ids_are_declared():
     found = _gate_ids()
     assert found == EXPECTED

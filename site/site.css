@@ -21,7 +21,7 @@
   --inset: 24px;
   --r-panel: 24px; --r-card: 16px; --r-ctl: 12px;
   --serif: "Hedvig Letters Serif", "Iowan Old Style", Georgia, serif;
-  --sans: Inter, system-ui, -apple-system, sans-serif;
+  --sans: "Source Sans 3", system-ui, -apple-system, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -227,7 +227,7 @@ body.is-locked { overflow: hidden; }
 #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }
 #grid .tile { aspect-ratio: 16 / 10; }
 .tile .tile-id { display: flex; align-items: center; gap: 8px; max-width: calc(100% - 20px); z-index: 2; }
-.tile .tile-title { font: 500 13px/20px Inter, system-ui, sans-serif; color: var(--text); text-shadow: 0 1px 8px rgba(0,0,0,.7);
+.tile .tile-title { font: 500 13px/20px "Source Sans 3", system-ui, sans-serif; color: var(--text); text-shadow: 0 1px 8px rgba(0,0,0,.7);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0; text-transform: none; }
 .route-pill.xs { height: 20px; min-height: 0; min-width: 0; padding: 0 8px 0 6px; font: 500 11px/1 var(--sans); gap: 5px; flex: none; }
 .route-pill.xs .robot-dot { width: 6px; height: 6px; }
@@ -311,7 +311,7 @@ body.is-locked { overflow: hidden; }
 
 /* route pill appears only once the user types; GPU picker lives in the prompt section */
 .route-pill.is-empty { width: 0; padding: 0; margin: 0; border-width: 0; opacity: 0; overflow: hidden; }
-.route-pill { transition: opacity .2s ease, width .2s ease, padding .2s ease; }
+.route-pill { transition: opacity .2s ease; }
 .route-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .route-row .route-line { flex: 1 1 260px; min-height: 1.2em; }
 .route-row .gpu { display: flex; align-items: center; gap: 8px; }

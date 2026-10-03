@@ -11,7 +11,7 @@
   function decide(_text, opts = {}) {
     const usd = BUDGETS.includes(opts.budget) ? opts.budget : budget;
     const c = ceiling(usd);
-    return { router: `robohub-q${c}`, budget: usd, ceiling: c, reasons: [`best quality up to ${c} credits a clip`] };
+    return { router: `robohub-q${c}`, budget: usd, ceiling: c, reasons: [`Gemini Veo`] };
   }
 
   const NAME = { "demo-cheap": "$2", "demo-fast": "Fast", "demo-best": "$10" };
