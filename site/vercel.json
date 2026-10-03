@@ -1,1 +1,5 @@
-{ "cleanUrls": false, "headers": [{ "source": "/runs/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }] }
+{
+  "framework": null,
+  "cleanUrls": false,
+  "headers": [{ "source": "/runs/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }]
+}
