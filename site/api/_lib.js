@@ -13,7 +13,7 @@ function keyOf(req) {
   if (Array.isArray(raw)) raw = raw[0] || "";
   const k = String(raw).trim();
   if (!k) throw fail("Add your Gemini API key to generate new prompts.", 401);
-  if (!/^AIza[A-Za-z0-9_-]{20,}$/.test(k)) throw fail("That doesn't look like a Gemini API key (it starts with AIza).", 401);
+  if (!/^(?:AIza|AQ\.)[A-Za-z0-9_-]{20,}$/.test(k)) throw fail("That doesn't look like a Gemini API key (it starts with AIza or AQ.).", 401);
   return k;
 }
 
