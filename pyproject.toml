@@ -1,0 +1,43 @@
+[project]
+name = "robohub"
+version = "0.1.0"
+description = "RoboHub: text prompts to physics-verified SO-101 demonstrations and SmolVLA policies"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mujoco>=3.3",
+  "numpy",
+  "opencv-python-headless",
+  "pillow",
+  "torch",
+  "lerobot[dataset,smolvla]==0.6.1",
+  "fastapi>=0.141.1",
+  "uvicorn>=0.53.0",
+  "supabase>=2.15",
+  "httpx>=0.28",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+robohub = "rohub.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rohub"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/rohub" = "rohub"
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
