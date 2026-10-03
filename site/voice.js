@@ -114,11 +114,21 @@
     if (msg.toolCall) onTool(msg);
   }
 
+  async function sessionKey() {
+    const typed = (keyIn?.value || "").trim();
+    if (typed) return typed;
+    const r = await fetch("/api/cloud/live-token", { method: "POST" });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.token) throw new Error(j.error || "Voice is not configured.");
+    return j.token;
+  }
+
   async function start() {
-    const key = (keyIn?.value || "").trim();
-    if (!key) {
+    let key;
+    try { key = await sessionKey(); }
+    catch (e) {
       if (keyRow) { keyRow.hidden = false; keyRow.classList.add("need"); }
-      say("Add a Gemini API key, then press Voice again.", true);
+      say(e.message || "Add a Gemini API key, then press Voice again.", true);
       return;
     }
     playCtx = new AudioContext();

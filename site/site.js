@@ -392,8 +392,18 @@
   const KEY = "robohub.geminiKey", keyRow = $("#key-row"), keyIn = $("#rw-key");
   try { keyIn.value = localStorage.getItem(KEY) || ""; } catch {}
   keyIn.addEventListener("input", () => { keyRow.classList.remove("need"); try { localStorage.setItem(KEY, keyIn.value.trim()); } catch {} });
-  ready.then(() => { keyRow.hidden = state.backend; });
-  const withKey = (opt = {}) => ({ ...opt, headers: { ...(opt.headers || {}), "X-Gemini-Key": keyIn.value.trim() } });
+  let serverGemini = false;
+  const geminiReady = fetch("/api/cloud/ready").then((r) => r.ok ? r.json() : {}).then((j) => {
+    serverGemini = !!j.gemini;
+    if (serverGemini && keyRow) keyRow.hidden = true;
+  }).catch(() => {});
+  ready.then(() => { if (!serverGemini) keyRow.hidden = state.backend; });
+  const withKey = (opt = {}) => {
+    const headers = { ...(opt.headers || {}) };
+    const typed = keyIn.value.trim();
+    if (typed) headers["X-Gemini-Key"] = typed;
+    return { ...opt, headers };
+  };
   const cpost = (url, data) => getJSON(url, withKey({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }));
   const norm = (s) => String(s || "").toLowerCase().replace(/\s+/g, " ").trim().replace(/[.!]+$/, "");
   let libSet = null;
@@ -497,7 +507,8 @@
     const rt = Route.decide(text, { budget: Route.budget });
     const dry = state.dry[rt.router] || DRY_FALLBACK[rt.router];
     const name = Route.NAME[rt.router] || rt.router;
-    const hasKey = state.backend || !!keyIn.value.trim();
+    await geminiReady;
+    const hasKey = state.backend || serverGemini || !!keyIn.value.trim();
     startRun(text, "", rt.router); CUR.slug = "";
     if (!hasKey) {
       const R = runTile(0, true);

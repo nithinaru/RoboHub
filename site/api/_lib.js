@@ -9,7 +9,7 @@ const hits = new Map();
 const fail = (msg, code) => Object.assign(new Error(msg), { code });
 
 function keyOf(req) {
-  let raw = req.headers["x-gemini-key"] || "";
+  let raw = req.headers["x-gemini-key"] || process.env.GEMINI_API_KEY || "";
   if (Array.isArray(raw)) raw = raw[0] || "";
   const k = String(raw).trim();
   if (!k) throw fail("Add your Gemini API key to generate new prompts.", 401);
