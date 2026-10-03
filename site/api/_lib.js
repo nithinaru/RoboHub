@@ -9,15 +9,24 @@ const hits = new Map();
 const fail = (msg, code) => Object.assign(new Error(msg), { code });
 
 function keyOf(req) {
-  const k = String(req.headers["x-gemini-key"] || "").trim();
+  let raw = req.headers["x-gemini-key"] || "";
+  if (Array.isArray(raw)) raw = raw[0] || "";
+  const k = String(raw).trim();
   if (!k) throw fail("Add your Gemini API key to generate new prompts.", 401);
   if (!/^AIza[A-Za-z0-9_-]{20,}$/.test(k)) throw fail("That doesn't look like a Gemini API key (it starts with AIza).", 401);
   return k;
 }
 
 function veoModel(budget) {
-  const usd = [2, 4, 6, 8, 10].includes(Number(budget)) ? Number(budget) : 2;
-  return usd >= 6 ? VEO : VEO_FAST;
+  const n = Number(budget);
+  if (!Number.isFinite(n)) return VEO_FAST;
+  return n >= 6 ? VEO : VEO_FAST;
+}
+
+function nearestBudget(budget) {
+  const n = Number(budget);
+  if (!Number.isFinite(n)) return 2;
+  return BUDGETS.reduce((best, b) => (Math.abs(b - n) < Math.abs(best - n) ? b : best), 2);
 }
 
 async function google(key, path, { method = "GET", body } = {}) {
@@ -28,7 +37,10 @@ async function google(key, path, { method = "GET", body } = {}) {
   });
   const j = await r.json().catch(() => ({}));
   if (r.status === 401 || r.status === 403) throw fail("Gemini rejected this API key.", 401);
-  if (!r.ok) throw fail(j.error?.message || `Gemini HTTP ${r.status}`, r.status === 400 ? 400 : 502);
+  if (!r.ok) {
+    const code = r.status === 400 || r.status === 429 ? r.status : 502;
+    throw fail(j.error?.message || `Gemini HTTP ${r.status}`, code);
+  }
   return j;
 }
 
@@ -58,26 +70,46 @@ async function startVideo(key, { prompt, b64, mime, budget }) {
       parameters: { aspectRatio: "16:9", durationSeconds: 8 },
     },
   });
-  if (!j.name) throw fail("Veo did not start a video job.", 502);
+  if (!isOp(j.name)) throw fail("Veo did not start a video job.", 502);
   return { name: j.name, model };
 }
 
+function videoUri(j) {
+  const box = j.response?.generateVideoResponse || {};
+  const samples = box.generatedSamples || box.videos || [];
+  return samples[0]?.video?.uri || samples[0]?.uri || null;
+}
+
 function operationStatus(j) {
+  if (!j || typeof j !== "object") return { status: "FAILED", failure: "Empty Veo status.", output: null, progress: null };
   if (j.error) return { status: "FAILED", failure: j.error.message || "Veo failed", output: null, progress: null };
   if (!j.done) return { status: "RUNNING", progress: 0.5, output: null, failure: null };
-  const uri = j.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
-  if (!uri) return { status: "FAILED", failure: "Veo finished without a video.", output: null, progress: 1 };
+  const uri = videoUri(j);
+  if (!allowedMediaUri(uri)) {
+    const why = j.response?.generateVideoResponse?.raiMediaFilteredReasons?.[0] || "Veo finished without a video.";
+    return { status: "FAILED", failure: why, output: null, progress: 1 };
+  }
   return { status: "SUCCEEDED", progress: 1, output: [uri], failure: null };
+}
+
+function allowedMediaUri(uri) {
+  let url;
+  try { url = new URL(String(uri || "")); } catch { return false; }
+  return url.protocol === "https:"
+    && url.hostname === "generativelanguage.googleapis.com"
+    && !url.username
+    && !url.password
+    && !url.pathname.includes("..");
 }
 
 const BUDGETS = [2, 4, 6, 8, 10];
 function decide(_task, budget) {
-  const usd = BUDGETS.includes(Number(budget)) ? Number(budget) : 2;
+  const usd = nearestBudget(budget);
   return { budget: usd, model: veoModel(usd), reasons: [`Gemini ${veoModel(usd)}`] };
 }
 
 function clean(prompt) {
-  const p = String(prompt || "").replace(/\s+/g, " ").trim().replace(/[.!]+$/, "");
+  const p = String(prompt ?? "").replace(/\s+/g, " ").trim().replace(/[.!?,;:]+$/g, "");
   if (p.length < 6 || p.length > 140 || !/^[a-zA-Z0-9 ,'-]+$/.test(p)) {
     throw fail("Use a short plain sentence (6 to 140 letters), like \"put the green cup on the plate\".", 400);
   }
@@ -91,6 +123,8 @@ const SCENES = [
 ];
 function variantOf(v) {
   if (v == null || v === "") return 0;
+  if (typeof v !== "number" && typeof v !== "string") throw fail(`variant must be 0 to ${SCENES.length - 1}`, 400);
+  if (typeof v === "string" && !/^\d+$/.test(v)) throw fail(`variant must be 0 to ${SCENES.length - 1}`, 400);
   const n = Number(v);
   if (!Number.isInteger(n) || n < 0 || n >= SCENES.length) throw fail(`variant must be 0 to ${SCENES.length - 1}`, 400);
   return n;
@@ -113,7 +147,10 @@ function limit(req) {
   recent.push(now); hits.set(ip, recent);
 }
 
-const isOp = (s) => /^models\/[A-Za-z0-9._-]+\/operations\/[A-Za-z0-9_-]+$/.test(String(s || ""));
+const isOp = (s) => {
+  const text = String(s || "");
+  return !text.includes("..") && /^models\/[A-Za-z0-9._-]+\/operations\/[A-Za-z0-9_-]+$/.test(text);
+};
 
 function send(res, fn) {
   res.setHeader("Cache-Control", "no-store");
@@ -121,6 +158,6 @@ function send(res, fn) {
 }
 
 module.exports = {
-  keyOf, google, still, startVideo, operationStatus, veoModel, decide, clean,
-  imagePrompt, variantOf, videoPrompt, limit, isOp, send, IMAGE_MODEL,
+  keyOf, google, still, startVideo, operationStatus, veoModel, nearestBudget, decide, clean,
+  imagePrompt, variantOf, videoPrompt, limit, isOp, allowedMediaUri, send, IMAGE_MODEL,
 };
