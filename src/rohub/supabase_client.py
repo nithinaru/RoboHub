@@ -138,6 +138,25 @@ class RoboHubStore:
         )
         return int(res.count or 0)
 
+    def accepted_dataset_paths(self, task_id: str) -> list[str]:
+        if not self.live or str(task_id).startswith("local-"):
+            return [
+                row["dataset_path"]
+                for row in self.offline_log
+                if row.get("kind") == "gate_audit"
+                and row.get("task_id") == task_id
+                and row.get("passed_gates")
+                and row.get("dataset_path")
+            ]
+        res = (
+            self._client.table("demonstrations")
+            .select("dataset_path")
+            .eq("task_id", task_id)
+            .eq("passed_gates", True)
+            .execute()
+        )
+        return [row["dataset_path"] for row in (res.data or []) if row.get("dataset_path")]
+
     def list_ready_tasks(self, min_accepted: int) -> list[dict[str, Any]]:
         """Tasks still queued or gating that already have enough accepted clips."""
         if not self.live:
