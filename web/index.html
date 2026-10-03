@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RoboHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./app.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">RoboHub</div>
+    <div class="meta">Text to policy · SO-101 · Supabase</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="kicker">Physical AI data</p>
+        <h1>Turn one sentence into a physics-checked demonstration.</h1>
+        <p class="lede">Prompt, video lead, 21 gates, SO-101 retarget, LeRobot v3.0, SmolVLA. Gate rows stream over Supabase Realtime.</p>
+      </div>
+      <form id="launch" class="panel">
+        <label for="prompt">Task prompt</label>
+        <textarea id="prompt" rows="3" required>put the red block in the bowl</textarea>
+        <div class="row">
+          <div>
+            <label for="budget">Budget tier</label>
+            <select id="budget">
+              <option value="2">$2 · fast</option>
+              <option value="4">$4</option>
+              <option value="6" selected>$6 · default</option>
+              <option value="8">$8</option>
+              <option value="10">$10 · highest</option>
+            </select>
+          </div>
+          <div>
+            <label for="arm-type">Arm</label>
+            <select id="arm-type">
+              <option value="so101" selected>SO-101</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" id="go">Generate dataset</button>
+        <p id="status" class="status">Idle. Offline mode replays a sample clip when Supabase env is empty.</p>
+      </form>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Physics inspection</h2>
+        <span id="verdict" class="pill">waiting</span>
+      </div>
+      <div id="gates" class="matrix"></div>
+    </section>
+
+    <section class="split">
+      <div class="panel canvas-wrap">
+        <div class="section-head">
+          <h2>SO-101 preview</h2>
+          <span class="hint">Three.js joint playback</span>
+        </div>
+        <canvas id="arm-view"></canvas>
+      </div>
+      <div class="panel">
+        <div class="section-head">
+          <h2>Trajectory explorer</h2>
+          <span class="hint">pgvector cosine</span>
+        </div>
+        <p class="hint">Search past demonstrations by 3D path. Uses <code>search_similar_trajectories</code> when Supabase is configured.</p>
+        <button type="button" id="search">Search similar paths</button>
+        <ul id="hits"></ul>
+        <canvas id="plot" width="640" height="220"></canvas>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
