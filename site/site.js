@@ -683,6 +683,16 @@
   input.addEventListener("focus", () => window.RoboHubPreview && RoboHubPreview.warm(), { once: true });
 
   // ---------- Train ----------
+  document.querySelector("#pay")?.addEventListener("click", async () => {
+    const r = await fetch("/api/cloud/checkout", { method: "POST" });
+    const j = await r.json().catch(() => ({}));
+    if (j.url) { location.href = j.url; return; }
+    if (j.paid && line) {
+      line.classList.remove("is-no");
+      line.textContent = "Paid $6.00 · SO-101 training credit";
+    }
+  });
+
   $("#composer").addEventListener("submit", async (ev) => {
     ev.preventDefault();
     if (state.running) return;
