@@ -203,7 +203,7 @@ physics verdict, rejected ones included.
 ### Hosted: bring your own Runway key
 
 On the live site the finished tasks play for free. A new sentence runs on **your Gemini API key**:
-paste it under the prompt. The key stays in this browser and is sent only to Google, through `site/api/cloud/`
+paste it under the prompt. **Voice** opens a Gemini Live session: speak the task, and the agent calls `start_training` to fill the prompt and press Train. The key stays in this browser and is sent only to Google, through `site/api/cloud/`
 (`start`, `video`, `task`, `media`). Gemini draws the first frame. Veo 3.1 Fast animates it under a $4 budget,
 and Veo 3.1 animates it at $6 and above. The hosted site generates that clip live; the physics gates, retargeting
 and SmolVLA training need the local pipeline below. Every Train, key or no key, first shows a scripted MuJoCo

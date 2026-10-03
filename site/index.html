@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="site.css?v=15">
   <script src="route.js?v=11" defer></script>
   <script src="preview.js?v=15" defer></script>
-  <script src="site.js?v=15" defer></script>
+  <script src="site.js?v=16" defer></script>
+  <script src="voice.js?v=1" defer></script>
 </head>
 <body>
   <main class="page">
@@ -38,6 +39,7 @@
           </div>
           <label class="sr-only" for="prompt">What should the robot learn?</label>
           <input class="prompt" id="prompt" type="text" maxlength="160" spellcheck="false" placeholder="put the red block in the bowl">
+          <button type="button" class="mic" id="mic" aria-pressed="false">Voice</button>
           <button type="submit" class="cta" id="go">Train</button>
         </div>
         <div class="route-row">

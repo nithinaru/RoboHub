@@ -105,6 +105,11 @@ body.is-locked { overflow: hidden; }
 }
 .cta:active { transform: scale(0.97); filter: brightness(0.94); }
 .cta:disabled { cursor: progress; filter: saturate(0.6) brightness(0.8); }
+.mic {
+  flex: none; min-height: 44px; padding: 0 var(--s4); font: 600 14px/1 var(--sans); color: var(--text);
+  border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.08); cursor: pointer;
+}
+.mic.on { color: var(--ink-0); background: var(--accent); }
 .route-line {
   margin: var(--s3) 0 0; min-height: 18px; text-align: center; font: 400 12.5px/1.45 var(--mono); color: var(--text-2);
   text-shadow: 0 1px 12px rgba(7, 9, 12, 0.9);
