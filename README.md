@@ -37,9 +37,54 @@ Text Prompt
 | `web/` | Developer dashboard |
 | `tests/` | Gate and logging checks |
 
-## Status
+![RoboHub dashboard](docs/img/dashboard.png)
 
-Scaffolding only. Pipeline, database, trainer, and UI land in later commits.
+## Quick start
+
+```bash
+uv sync
+cp .env.example .env
+```
+
+Fill `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. In the Supabase SQL editor, run `supabase/migrations/001_rohub_schema.sql`. That enables `vector`, creates `tasks`, `demonstrations`, and `models`, and adds `search_similar_trajectories`.
+
+```bash
+# dashboard
+python -m http.server --directory web 8765
+
+# gate and logging checks
+uv run pytest
+
+# train when a task has enough accepted clips
+python gpu/worker.py
+```
+
+Open http://127.0.0.1:8765. With empty Supabase env vars the page still runs: Generate replays the 21 gates locally, and Search shows sample trajectories. With keys in `localStorage` (`ROBOHUB_SUPABASE_URL`, `ROBOHUB_SUPABASE_ANON_KEY`) the same buttons insert tasks and call the pgvector RPC.
+
+| Variable | Role |
+|---|---|
+| `SUPABASE_URL` | Project URL |
+| `SUPABASE_ANON_KEY` | Browser reads and Realtime |
+| `SUPABASE_SERVICE_ROLE_KEY` | Pipeline writes and Storage uploads |
+| `SUPABASE_STORAGE_BUCKET` | Default `robohub-artifacts` |
+| `RUNWAY_API_KEY` | Video lead |
+| `RUNPOD_API_KEY` | SmolVLA rental |
+| `ROBOHUB_MIN_ACCEPTED` | Accepted clips before training (default 4) |
+| `ROBOHUB_TRAIN_STEPS` | SmolVLA steps (default 3000) |
+
+## Benchmarks
+
+Same task, same SmolVLA base, same 50 unseen MuJoCo starts. Numbers are from the source pipeline this repo adapts ([understudy-replay](https://github.com/PranavAchar01/understudy-replay), measured 2026-09). RoboHub did not re-train these checkpoints in this repository.
+
+| Demonstrations | 3,000 steps | 20,000 steps |
+|---|---|---|
+| Generated video, 21-gate filter, SO-101 retarget | 34/50 | 43/50 (86%) |
+| Scripted operator in the same sim | 44/50 | 44/50 (88%) |
+| Untrained SmolVLA | 0/50 | 0/50 |
+
+Training the 20,000-step pick policy took about 48 minutes on an RTX 5090 (about $0.55). The 95% intervals overlap the scripted operator at 20,000 steps.
+
+![SO-101 preview](docs/img/arm-preview.png)
 
 ## License
 

@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(Path(__file__).parent))
 
-from robohub_trainer import train  # noqa: E402
+from rohub_trainer import train  # noqa: E402
 from rohub.supabase_client import get_store  # noqa: E402
 
 
