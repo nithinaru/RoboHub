@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RoboHub</title>
+  <meta name="description" content="Robot training from a sentence. Runway films the demos, MuJoCo checks the physics, SmolVLA learns the task.">
+  <meta name="theme-color" content="#07090c">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2307090c'/%3E%3Crect x='14' y='30' width='16' height='16' fill='%23ba483a'/%3E%3Crect x='34' y='18' width='16' height='28' fill='%23c4963e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="site.css?v=15">
+  <script src="route.js?v=11" defer></script>
+  <script src="preview.js?v=15" defer></script>
+  <script src="site.js?v=15" defer></script>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" id="hero">
+      <div class="hero-media" aria-hidden="true"><div class="hero-img"></div></div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <header class="hero-bar">
+        <span class="wordmark">RoboHub</span>
+        <span class="hero-tag">Robot training from a sentence</span>
+        <a class="hero-tag" href="/console/">Gate console</a>
+      </header>
+
+      <div class="hero-copy">
+        <h1 class="title">I don't have a robotics lab.<br><em>So Runway films the demos.</em></h1>
+      </div>
+
+      <form class="composer" id="composer" autocomplete="off">
+        <div class="bar">
+          <div class="route-pill is-empty" id="route-pill" role="status" aria-live="polite" title="Your budget picks the Runway Model Router: best quality under a price ceiling">
+            <span class="robot-dot"></span><span id="route-label"></span>
+          </div>
+          <label class="sr-only" for="prompt">What should the robot learn?</label>
+          <input class="prompt" id="prompt" type="text" maxlength="160" spellcheck="false" placeholder="put the red block in the bowl">
+          <button type="submit" class="cta" id="go">Train</button>
+        </div>
+        <div class="route-row">
+          <p class="route-line" id="route-line"></p>
+          <div class="gpu" title="GPU for SmolVLA training, RunPod on-demand">
+          <span class="gpu-label" id="gpu-label">GPU</span>
+          <div class="gpu-seg" id="gpu-seg" role="radiogroup" aria-labelledby="gpu-label"></div>
+          <span class="gpu-hint" id="gpu-hint" aria-live="polite"></span>
+          </div>
+
+          <div class="gpu" title="What one run (5 Runway clips) may cost. Every option is a quality-optimized Model Router with that price ceiling.">
+            <span class="gpu-label" id="budget-label">Budget / run</span>
+            <div class="gpu-seg" id="budget-seg" role="radiogroup" aria-labelledby="budget-label"></div>
+          </div>
+        </div>
+        <div class="key-row" id="key-row" hidden>
+          <label class="gpu-label" for="rw-key">Runway API key</label>
+          <input class="key-input" id="rw-key" type="password" placeholder="key_..." autocomplete="off" spellcheck="false">
+          <span class="key-hint">New prompts run on your own Runway credits. The key goes straight to Runway and is kept only in this browser. <a href="https://dev.runwayml.com" target="_blank" rel="noopener">Get a key</a></span>
+          <span class="key-need">The 3 Runway demonstration clips for a new prompt need your key.</span>
+        </div>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-text="put the red block in the bowl">put the red block in the bowl</button>
+          <button type="button" class="chip" data-text="push the red block onto the blue square">push the red block onto the blue square</button>
+          <button type="button" class="chip" data-text="stack the red block on the blue block">stack the red block on the blue block</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="fleet" id="fleet" hidden aria-label="Training run">
+      <header class="fleet-head">
+        <div class="run-title"><span class="route-pill sm" id="run-pill"><span class="robot-dot"></span><span></span></span><h2 id="run-task"></h2>
+          <div class="stats" id="stats"><div data-m="time"><b>0:00</b><span>Time</span></div></div>
+        </div>
+      </header>
+      <div class="grid" id="grid"></div>
+      <div id="prompts"></div>
+    </section>
+  </main>
+
+  <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Prompt overview">
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+    <div class="sheet-panel ov">
+      <div class="ov-film"><video id="sheet-video" muted loop playsinline autoplay></video></div>
+      <aside class="ov-side">
+        <h3 class="ov-h">How this VLA was trained</h3>
+        <ol class="ov-steps" id="ov-steps"></ol>
+        <a class="cta ov-dl" id="ov-dl" aria-disabled="true" rel="noopener">Download VLA</a>
+        <a class="ov-jump" id="ov-jump" href="#ov-gallery" hidden></a>
+      </aside>
+      <section class="ov-gallery" id="ov-gallery" hidden aria-label="Every Runway clip for this task">
+        <div class="ov-gh"><h3 class="ov-h">Every Runway clip for this task</h3><p class="ov-gsum" id="ov-gsum"></p></div>
+        <ul class="ov-grid" id="ov-grid"></ul>
+      </section>
+      <button type="button" class="close" id="sheet-close" aria-label="Close">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="m2 2 10 10M12 2 2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <footer class="foot"><p>Runway Model Router · MuJoCo physics · SO-101 · SmolVLA · simulated</p></footer>
+  <div class="grain" aria-hidden="true"></div>
+</body>
+</html>

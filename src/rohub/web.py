@@ -46,11 +46,8 @@ from .generate import cost_per_clip, estimate_more, existing_clips, next_index
 from .plan import Infeasible, parse_task
 
 REPO = runway.REPO
-# the Replay-style site (deploy-v2, built by site-v2/build-deploy.sh); ROBOHUB_SITE=site serves the older page
-SITE = REPO / os.environ.get(
-    "ROBOHUB_SITE",
-    "deploy-v2" if (REPO / "deploy-v2" / "index.html").is_file() else "site",
-)
+# Hosted UI in site/. ROBOHUB_SITE overrides the directory.
+SITE = REPO / os.environ.get("ROBOHUB_SITE", "site")
 RUNS = REPO / "data" / "web-runs"
 RUNS.mkdir(parents=True, exist_ok=True)
 CLIPS = int(os.environ.get("ROBOHUB_CLIPS", "5"))

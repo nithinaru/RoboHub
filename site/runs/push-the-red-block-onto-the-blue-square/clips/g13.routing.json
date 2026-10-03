@@ -1,0 +1,10 @@
+{
+ "router": "demo-cheap",
+ "model": "gemini_omni_flash",
+ "provider": "google",
+ "estimated_credits": 50,
+ "seconds": 60.0,
+ "task_id": "81e58e39-d2ea-4263-a3c5-653942d7c239",
+ "prompt": "Photorealistic video, a front view, about 45 degrees down, of a dark walnut table lit by soft natural daylight from a window on the left, with exactly two things on it: one small red wooden toy block (a 3 cm cube) on the left, and about 15 cm to its right a square outline of blue masking tape, about 8 cm on each side, stuck flat on the table. A person's right hand rests its fingertips against the left face of the red block and pushes it steadily across the table surface, sliding it until the block sits fully inside the blue taped square. The block stays flat on the table while it slides. Then the open hand lifts up and away. The static camera stays locked off, the motion is smooth and at natural speed, and every block keeps its shape and color the whole time. The whole hand and all objects stay fully in frame.",
+ "text_to_video": true
+}

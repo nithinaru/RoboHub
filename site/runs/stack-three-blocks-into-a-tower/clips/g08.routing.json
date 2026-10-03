@@ -1,0 +1,10 @@
+{
+ "router": "demo-best",
+ "model": "seedance2_5",
+ "provider": "bytedance",
+ "estimated_credits": 150,
+ "seconds": 372.9,
+ "task_id": "36011314-2cf8-4636-9d47-1b39146ef0de",
+ "prompt": "Photorealistic video, a low front view from table height, about 25 degrees down, of a grey concrete worktop lit by mixed daylight with a slight blue tint, with exactly three things on it: one flat blue wooden slab (about 6 cm wide and 2 cm tall) in the centre, one small red wooden cube (3 cm) to its left, and one small green wooden cube (3 cm) to its right. A person's right hand picks up the red cube and places it centred on top of the blue slab, then picks up the green cube and places it centred on top of the red cube, then moves away. At the end the three pieces stand as one tower: blue slab at the bottom, red cube in the middle, green cube on top. The static camera stays locked off, the motion is smooth and at natural speed, and every block keeps its shape and color the whole time. The whole hand and all objects stay fully in frame.",
+ "text_to_video": true
+}

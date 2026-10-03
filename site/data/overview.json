@@ -1,0 +1,131 @@
+{
+  "put-the-red-block-in-the-bowl": {
+    "prompt": "put the red block in the bowl",
+    "route": {
+      "router": "$2 budget",
+      "model": "gen4_turbo",
+      "credits_per_clip": 25
+    },
+    "demonstrations": {
+      "generated": 7,
+      "accepted": 4,
+      "rejected": "3 rejected: block duplicated",
+      "source": "Runway video, physics-filtered"
+    },
+    "dataset": {
+      "episodes": 74,
+      "frames": 25190,
+      "cameras": "front + wrist"
+    },
+    "training": {
+      "base": "SmolVLA",
+      "steps": 20000,
+      "gpu": "one RTX 5090",
+      "time": "48 min",
+      "cost": "under $1"
+    },
+    "result": {
+      "successes": 43,
+      "seeds": 50,
+      "note": "on unseen positions in simulation"
+    },
+    "download": {
+      "url": "https://github.com/PranavAchar01/understudy-replay/releases/download/vla-pick-20k/understudy-smolvla-pick-20k.zip",
+      "size": "907 MB"
+    },
+    "run_seconds": 1149
+  },
+  "push-the-red-block-onto-the-blue-square": {
+    "prompt": "push the red block onto the blue square",
+    "route": {
+      "router": "$2 budget",
+      "model": "gen4_turbo",
+      "credits_per_clip": 25,
+      "note": "one Runway reference clip"
+    },
+    "demonstrations": {
+      "episodes": 30,
+      "source": "scripted operator"
+    },
+    "dataset": {
+      "episodes": 30,
+      "cameras": "front + wrist"
+    },
+    "training": {
+      "base": "SmolVLA",
+      "steps": 3000,
+      "gpu": "RTX 4090 (RunPod)",
+      "time": "17.5 min"
+    },
+    "result": "3/5 on unseen starts in simulation",
+    "download": {
+      "url": "https://github.com/PranavAchar01/understudy-replay/releases/download/vla-pick-20k/understudy-smolvla-pick-20k.zip",
+      "size": "907 MB"
+    },
+    "run_seconds": 1049,
+    "download_note": "Pick-and-place model for now; this task's own VLA replaces it when training finishes"
+  },
+  "stack-the-red-block-on-the-blue-block": {
+    "prompt": "stack the red block on the blue block",
+    "route": {
+      "router": "$10 budget",
+      "model": "seedance2_5",
+      "credits_per_clip": 150,
+      "note": "one real Runway reference clip, on the $10 budget router (313 s)"
+    },
+    "demonstrations": {
+      "episodes": 30,
+      "source": "scripted operator"
+    },
+    "dataset": {
+      "episodes": 30,
+      "cameras": "front + wrist"
+    },
+    "training": {
+      "base": "SmolVLA",
+      "steps": 2000,
+      "gpu": "RunPod"
+    },
+    "result": null,
+    "download": {
+      "url": "https://github.com/PranavAchar01/understudy-replay/releases/download/vla-pick-20k/understudy-smolvla-pick-20k.zip",
+      "size": "907 MB"
+    },
+    "run_seconds": null,
+    "download_note": "Pick-and-place model for now; this task's own VLA replaces it when training finishes"
+  },
+  "stack-three-blocks-into-a-tower": {
+    "prompt": "stack three blocks into a tower",
+    "route": {
+      "router": "$10 budget",
+      "model": "gemini_omni_flash_1.1",
+      "credits_per_clip": 51,
+      "note": "one real Runway reference clip, on the $10 budget router"
+    },
+    "demonstrations": {
+      "episodes": 25,
+      "source": "scripted operator"
+    },
+    "dataset": {
+      "episodes": 25,
+      "cameras": "front + wrist"
+    },
+    "training": {
+      "base": "SmolVLA",
+      "steps": 14000,
+      "gpu": "L40S (RunPod)",
+      "time": "33.7 min",
+      "cost": "$0.73"
+    },
+    "result": {
+      "successes": 1,
+      "seeds": 5,
+      "note": "on unseen starts in simulation"
+    },
+    "download": {
+      "url": "https://github.com/PranavAchar01/understudy-replay/releases/download/vla-tower-14k/understudy-smolvla-tower-14k.zip",
+      "size": "907 MB"
+    },
+    "run_seconds": 2022
+  }
+}

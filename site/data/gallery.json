@@ -1,0 +1,676 @@
+{
+ "put-the-red-block-in-the-bowl": [
+  {
+   "id": "v00",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v00.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Rejected",
+   "reason": "Claude counts 2 red blocks, 1 bowls, 1 hands in the first frame"
+  },
+  {
+   "id": "v01",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v01.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Accepted",
+   "reason": ""
+  },
+  {
+   "id": "v02",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v02.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Rejected",
+   "reason": "a second red block appears on 10 frames (first at 3.3 s)"
+  },
+  {
+   "id": "v03",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v03.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Accepted",
+   "reason": ""
+  },
+  {
+   "id": "v04",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v04.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Rejected",
+   "reason": "a second red block appears on 15 frames (first at 3.5 s)"
+  },
+  {
+   "id": "v05",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v05.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Rejected",
+   "reason": "a second red block appears on 18 frames (first at 3.4 s)"
+  },
+  {
+   "id": "v06",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v06.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Accepted",
+   "reason": ""
+  },
+  {
+   "id": "v07",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v07.mp4",
+   "router": "direct",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": "Accepted",
+   "reason": ""
+  },
+  {
+   "id": "v08",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v08.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v09",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v09.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v10",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v10.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v11",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v11.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v12",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v12.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v13",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v13.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v14",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v14.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v15",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v15.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v16",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v16.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v17",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v17.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v18",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v18.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v19",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v19.mp4",
+   "router": "demo-fast",
+   "model": "seedance2_fast",
+   "credits": 145,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v20",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v20.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v21",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v21.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v22",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v22.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v23",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v23.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v24",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v24.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v25",
+   "url": "runs/put-the-red-block-in-the-bowl/clips/v25.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  }
+ ],
+ "push-the-red-block-onto-the-blue-square": [
+  {
+   "id": "v01",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/v01.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g01",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g01.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g02",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g02.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g03",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g03.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g04",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g04.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g05",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g05.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g06",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g06.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g07",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g07.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g08",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g08.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g09",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g09.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g10",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g10.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g11",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g11.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g12",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g12.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g13",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g13.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g14",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g14.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g15",
+   "url": "runs/push-the-red-block-onto-the-blue-square/clips/g15.mp4",
+   "router": "demo-cheap",
+   "model": "gemini_omni_flash",
+   "credits": 50,
+   "verdict": null,
+   "reason": ""
+  }
+ ],
+ "stack-the-red-block-on-the-blue-block": [
+  {
+   "id": "b01",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/b01.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "v01",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/v01.mp4",
+   "router": "demo-cheap",
+   "model": "gen4_turbo",
+   "credits": 25,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g01",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g01.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g02",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g02.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g03",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g03.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g04",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g04.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g05",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g05.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g06",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g06.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g07",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g07.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g08",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g08.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g09",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g09.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g10",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g10.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g11",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g11.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g12",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g12.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g13",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g13.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g14",
+   "url": "runs/stack-the-red-block-on-the-blue-block/clips/g14.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  }
+ ],
+ "stack-three-blocks-into-a-tower": [
+  {
+   "id": "v01",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/v01.mp4",
+   "router": "demo-best",
+   "model": "gemini_omni_flash_1.1",
+   "credits": 51,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g01",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g01.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g02",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g02.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g03",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g03.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g04",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g04.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g05",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g05.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g06",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g06.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g07",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g07.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g08",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g08.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g09",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g09.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g10",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g10.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g11",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g11.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g12",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g12.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g13",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g13.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g14",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g14.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  },
+  {
+   "id": "g15",
+   "url": "runs/stack-three-blocks-into-a-tower/clips/g15.mp4",
+   "router": "demo-best",
+   "model": "seedance2_5",
+   "credits": 150,
+   "verdict": null,
+   "reason": ""
+  }
+ ]
+}

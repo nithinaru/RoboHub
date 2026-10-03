@@ -1,0 +1,10 @@
+{
+ "router": "demo-best",
+ "model": "seedance2_5",
+ "provider": "bytedance",
+ "estimated_credits": 150,
+ "seconds": 253.9,
+ "task_id": "7683b07f-39f0-41e2-a9b5-da1c28ba1241",
+ "prompt": "Photorealistic video, a low front view from table height, about 25 degrees down, of a grey concrete worktop lit by mixed daylight with a slight blue tint, with exactly two things on it: one small red wooden cube (3 cm) on the left, and about 20 cm to its right one flat blue wooden block, a square slab about 6 cm wide and 2 cm tall. A person's right hand pinches the red cube between thumb and index finger, lifts it about 10 cm, carries it to the right and sets it down centred on top of the flat blue block, then opens the fingers and moves away. At the end the red cube rests steadily on top of the blue block. The static camera stays locked off, the motion is smooth and at natural speed, and every block keeps its shape and color the whole time. The whole hand and all objects stay fully in frame.",
+ "text_to_video": true
+}

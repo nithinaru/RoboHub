@@ -1,0 +1,10 @@
+{
+ "router": "demo-best",
+ "model": "seedance2_5",
+ "provider": "bytedance",
+ "estimated_credits": 150,
+ "seconds": 280.1,
+ "task_id": "7ca8d076-1486-484d-b482-d21f07f84d67",
+ "prompt": "Photorealistic video, a front view from slightly to the left, about 35 degrees down, of a matte white laminate desk lit by a warm desk lamp at night with a dark background, with exactly two things on it: one small red wooden cube (3 cm) on the left, and about 20 cm to its right one flat blue wooden block, a square slab about 6 cm wide and 2 cm tall. A person's right hand pinches the red cube between thumb and index finger, lifts it about 10 cm, carries it to the right and sets it down centred on top of the flat blue block, then opens the fingers and moves away. At the end the red cube rests steadily on top of the blue block. The static camera stays locked off, the motion is smooth and at natural speed, and every block keeps its shape and color the whole time. The whole hand and all objects stay fully in frame.",
+ "text_to_video": true
+}

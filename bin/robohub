@@ -1,0 +1,17 @@
+#!/bin/zsh
+# RoboHub entry point. Reads API keys from the environment, or the macOS Keychain for this process only.
+set -e
+ROOT="${0:A:h:h}"
+if [[ -z "${RUNWAY_API_KEY:-}" ]]; then
+  export RUNWAY_API_KEY="$(security find-generic-password -s RUNWAY_API_KEY -w 2>/dev/null || true)"
+fi
+if [[ -z "${RUNPOD_API_KEY:-}" ]]; then
+  export RUNPOD_API_KEY="$(security find-generic-password -s RUNPOD_API_KEY -w 2>/dev/null || true)"
+fi
+export PYTHONPATH="$ROOT/src"
+cd "$ROOT"
+PY="${ROOT}/.venv/bin/python"
+if [[ ! -x "$PY" ]]; then
+  PY="$(command -v python3)"
+fi
+exec "$PY" -m rohub.cli "$@"

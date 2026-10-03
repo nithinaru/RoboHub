@@ -1,0 +1,70 @@
+{
+ "demo-cheap": {
+  "model": "gen4_turbo",
+  "provider": "runway",
+  "configId": "demo-cheap",
+  "resolvedSettings": {
+   "optimizeFor": "cost",
+   "priceCeiling": null
+  },
+  "resolvedInput": {
+   "duration": 5,
+   "ratio": "1280:720",
+   "resolution": "720p"
+  },
+  "estimatedCost": {
+   "credits": 25
+  }
+ },
+ "demo-fast": {
+  "model": "seedance2_fast",
+  "provider": "bytedance",
+  "configId": "demo-fast",
+  "resolvedSettings": {
+   "optimizeFor": "latency",
+   "priceCeiling": null
+  },
+  "resolvedInput": {
+   "duration": 5,
+   "ratio": "1280:720",
+   "resolution": "720p"
+  },
+  "estimatedCost": {
+   "credits": 145
+  }
+ },
+ "demo-best": {
+  "model": "seedance2_5",
+  "provider": "bytedance",
+  "configId": "demo-best",
+  "resolvedSettings": {
+   "optimizeFor": "quality",
+   "priceCeiling": null
+  },
+  "resolvedInput": {
+   "duration": 5,
+   "ratio": "1280:720",
+   "resolution": "720p"
+  },
+  "estimatedCost": {
+   "credits": 150
+  }
+ },
+ "robot": {
+  "model": "gen4_turbo",
+  "provider": "runway",
+  "configId": "robot",
+  "resolvedSettings": {
+   "optimizeFor": "cost",
+   "priceCeiling": null
+  },
+  "resolvedInput": {
+   "duration": 5,
+   "ratio": "1280:720",
+   "resolution": "720p"
+  },
+  "estimatedCost": {
+   "credits": 25
+  }
+ }
+}

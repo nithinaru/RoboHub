@@ -1,0 +1,7 @@
+{
+ "router": "demo-best",
+ "model": "seedance2_5",
+ "provider": "bytedance",
+ "estimated_credits": 150,
+ "seconds": 314
+}

@@ -1,0 +1,18 @@
+{
+  "task": "put the red block in the bowl",
+  "slug": "put-the-red-block-in-the-bowl",
+  "router": "demo-cheap",
+  "model": "gen4_turbo",
+  "seconds": 1149,
+  "episodes": 44,
+  "note": "Recorded run of 2026-09-23/24: 7 Runway clips (gen4_turbo video + first frame, ledger costs), 21 physics gates, 4 accepted, 44 LeRobot episodes; tiles are the fine-tuned SmolVLA in MuJoCo. seconds = Runway generation (271 s) + data stage (878.5 s).",
+  "clips": [
+    {"id": "v01", "credits": 30, "accepted": true, "reason": "accepted", "film": "v01.mp4", "success": true},
+    {"id": "v02", "credits": 27, "accepted": false, "reason": "block duplicated"},
+    {"id": "v03", "credits": 27, "accepted": true, "reason": "accepted", "film": "v03.mp4", "success": true},
+    {"id": "v04", "credits": 27, "accepted": false, "reason": "block duplicated"},
+    {"id": "v05", "credits": 27, "accepted": false, "reason": "block duplicated"},
+    {"id": "v06", "credits": 27, "accepted": true, "reason": "accepted", "film": "v06.mp4", "success": true},
+    {"id": "v07", "credits": 27, "accepted": true, "reason": "accepted", "film": "v07.mp4", "success": true}
+  ]
+}
