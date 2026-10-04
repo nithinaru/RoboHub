@@ -11,11 +11,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="site.css?v=15">
+  <link rel="stylesheet" href="site.css?v=16">
   <link rel="stylesheet" href="motion.css?v=1">
   <script src="route.js?v=11" defer></script>
   <script src="preview.js?v=15" defer></script>
-  <script src="site.js?v=16" defer></script>
+  <script src="site.js?v=17" defer></script>
   <script src="voice.js?v=1" defer></script>
 </head>
 <body>
@@ -79,7 +79,42 @@
       </header>
       <div class="grid" id="grid"></div>
       <div id="prompts"></div>
+      <div class="bench" id="bench" hidden>
+        <ol class="bench-steps" id="bench-steps">
+          <li data-step="voice">Voice</li>
+          <li data-step="film">Film</li>
+          <li data-step="db">Supabase</li>
+          <li data-step="fit">Fit hand</li>
+          <li data-step="arm">Robot</li>
+        </ol>
+        <div class="bench-stage">
+          <div class="pane pane-hand">
+            <video id="bench-film" muted loop playsinline></video>
+            <canvas id="bench-track" aria-hidden="true"></canvas>
+            <p class="pane-cap" id="bench-hand-cap">Hand</p>
+          </div>
+          <div class="pane pane-side">
+            <div class="db" id="bench-db">
+              <header class="db-head"><span class="live-dot"></span><span>Supabase Compute</span><b id="db-count">idle</b></header>
+              <div class="db-meter" aria-hidden="true"><i id="db-meter"></i></div>
+              <ol class="db-log" id="db-log"></ol>
+              <div class="db-gates" id="db-gates"></div>
+            </div>
+            <div class="armbox" id="bench-armbox" hidden>
+              <canvas id="bench-arm" aria-label="Fitting the hand onto the SO-101"></canvas>
+              <p class="pane-cap" id="bench-arm-cap">Fitting the pinch to the gripper</p>
+            </div>
+            <div class="simbox" id="bench-sim" hidden>
+              <p class="pane-cap">SO-101 doing the same task</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
+    <div class="voice-pop" id="voice-pop" hidden>
+      <div class="bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <p>Gemini Live is on. Talk, or keep typing.</p>
+    </div>
   </main>
 
   <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Prompt overview">

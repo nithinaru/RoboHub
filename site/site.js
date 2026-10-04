@@ -687,7 +687,7 @@
     const r = await fetch("/api/cloud/checkout", { method: "POST" });
     const j = await r.json().catch(() => ({}));
     if (j.url) { location.href = j.url; return; }
-    if (j.paid && line) {
+    if ((j.paid || qs.get("demo") === "1") && line) {
       line.classList.remove("is-no");
       line.textContent = "Paid $6.00 · SO-101 training credit";
     }
@@ -713,8 +713,238 @@
   new MutationObserver(() => document.querySelectorAll("video").forEach((v) => { if (!v.__io) { v.__io = 1; playIO.observe(v); } })).observe(document.body, { childList: true, subtree: true });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) document.querySelectorAll("video").forEach((v) => { if (v.src && v.paused && v.getBoundingClientRect().top < innerHeight) v.play().catch(() => {}); }); });
 
+  function drawFit(track, arm, t) {
+    const phase = (t % 6) / 6;
+    const block = { x: 0.38, y: 0.64 };
+    const bowl = { x: 0.58, y: 0.6 };
+    let x = block.x;
+    let y = block.y - 0.2;
+    let closed = false;
+    let carry = false;
+    if (phase < 0.22) y = block.y - 0.2 + 0.2 * (phase / 0.22);
+    else if (phase < 0.34) { y = block.y; closed = phase > 0.28; }
+    else if (phase < 0.5) { closed = true; carry = true; y = block.y - 0.2 * ((phase - 0.34) / 0.16); }
+    else if (phase < 0.74) {
+      closed = true; carry = true;
+      const u = (phase - 0.5) / 0.24;
+      x = block.x + (bowl.x - block.x) * u;
+      y = block.y - 0.2;
+    } else if (phase < 0.88) {
+      closed = true; carry = true;
+      x = bowl.x;
+      y = block.y - 0.2 + 0.16 * ((phase - 0.74) / 0.14);
+    } else { x = bowl.x; y = bowl.y - 0.16; }
+    const prep = (c) => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      const w = c.clientWidth;
+      const h = c.clientHeight;
+      if (!w || !h) return null;
+      const pw = Math.round(w * dpr);
+      const ph = Math.round(h * dpr);
+      if (c.width !== pw || c.height !== ph) { c.width = pw; c.height = ph; }
+      const g = c.getContext("2d");
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.clearRect(0, 0, w, h);
+      return { g, w, h };
+    };
+    const hand = prep(track);
+    if (hand) {
+      const px = x * hand.w;
+      const py = y * hand.h;
+      hand.g.strokeStyle = "rgba(143,211,166,.95)";
+      hand.g.lineWidth = 2;
+      hand.g.beginPath();
+      hand.g.arc(px, py, 16, 0, Math.PI * 2);
+      hand.g.stroke();
+      hand.g.fillStyle = "#8fd3a6";
+      hand.g.beginPath();
+      hand.g.arc(px, py, 4, 0, Math.PI * 2);
+      hand.g.fill();
+    }
+    const view = prep(arm);
+    if (!view) return;
+    const { g, w, h } = view;
+    const mapX = (nx) => 90 + nx * (w - 180);
+    g.strokeStyle = "#3a4452";
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(36, h * 0.8);
+    g.lineTo(w - 36, h * 0.8);
+    g.stroke();
+    g.fillStyle = "#d9d3c8";
+    g.beginPath();
+    g.ellipse(mapX(bowl.x), h * 0.8 - 8, 40, 16, 0, 0, Math.PI * 2);
+    g.fill();
+    const blockX = carry ? mapX(x) : mapX(block.x);
+    const blockY = carry ? h * 0.8 - (0.8 - y) * h * 0.55 : h * 0.8 - 28;
+    g.fillStyle = "#ba483a";
+    g.fillRect(blockX - 16, blockY - 18, 32, 32);
+    const base = { x: 78, y: h * 0.34 };
+    const target = { x: blockX, y: Math.min(blockY - 28, h * 0.8 - 48) };
+    const elbow = { x: (base.x + target.x) / 2, y: Math.min(base.y, target.y) - 80 };
+    g.strokeStyle = "#e7e2d8";
+    g.lineWidth = 10;
+    g.lineCap = "round";
+    g.lineJoin = "round";
+    g.beginPath();
+    g.moveTo(base.x, base.y);
+    g.lineTo(elbow.x, elbow.y);
+    g.lineTo(target.x, target.y);
+    g.stroke();
+    g.fillStyle = "#c4963e";
+    for (const p of [base, elbow, target]) {
+      g.beginPath();
+      g.arc(p.x, p.y, 8, 0, Math.PI * 2);
+      g.fill();
+    }
+    const jaw = closed ? 7 : 18;
+    g.strokeStyle = "#e7e2d8";
+    g.lineWidth = 4;
+    g.beginPath();
+    g.moveTo(target.x - jaw, target.y);
+    g.lineTo(target.x - jaw, target.y + 26);
+    g.moveTo(target.x + jaw, target.y);
+    g.lineTo(target.x + jaw, target.y + 26);
+    g.stroke();
+    g.font = "600 13px ui-sans-serif, system-ui, sans-serif";
+    g.fillStyle = "#8fd3a6";
+    g.fillText(closed ? "gripper closed" : "gripper open", 24, 36);
+  }
+
   // ---------- library: finished runs are already on the page when you scroll down ----------
+  async function demoTour() {
+    const until = (sec) => wait(Math.max(0, sec * 1000 - (performance.now() - t0)));
+    const t0 = performance.now();
+    const cursor = document.createElement("div");
+    cursor.setAttribute("aria-hidden", "true");
+    cursor.style.cssText = "position:fixed;z-index:80;width:18px;height:18px;margin:-2px 0 0 -2px;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 8px #000;pointer-events:none;left:48%;top:42%;opacity:0;transition:left .35s ease,top .35s ease,opacity .2s ease";
+    document.body.append(cursor);
+    const point = (el) => {
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      cursor.style.opacity = "1";
+      cursor.style.left = `${r.left + r.width / 2}px`;
+      cursor.style.top = `${r.top + Math.min(r.height / 2, 28)}px`;
+    };
+    const away = () => { cursor.style.opacity = "0"; };
+    const text = "put the red block in the bowl";
+    const gates = ["Frame rate", "Clip length", "Scene audit", "One red object", "No duplicate", "Hand visible", "Block tracked", "Grasp, lift, release", "Block follows hand", "Lift height", "Carry distance", "Ends in bowl", "IK limits", "Velocity", "Acceleration", "Jerk", "Close before lift", "Open over bowl", "MuJoCo success", "No self-collision", "Episode length"];
+    const gateHost = $("#db-gates");
+    for (const name of gates) {
+      const cell = document.createElement("span");
+      cell.textContent = name;
+      gateHost.append(cell);
+    }
+    const order = ["voice", "film", "db", "fit", "arm"];
+    const mark = (name) => {
+      const n = order.indexOf(name);
+      document.querySelectorAll("#bench-steps li").forEach((li) => {
+        const i = order.indexOf(li.dataset.step);
+        li.classList.toggle("is-on", i === n);
+        li.classList.toggle("is-done", i >= 0 && i < n);
+      });
+    };
+    const log = (html) => {
+      const li = document.createElement("li");
+      li.innerHTML = html;
+      const box = $("#db-log");
+      box.append(li);
+      while (box.children.length > 5) box.firstChild.remove();
+    };
+    if (window.RoboHubPreview) RoboHubPreview.warm();
+    input.value = "";
+    input.focus();
+    point(input);
+    await until(0.6);
+    for (const ch of text) {
+      input.value += ch;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      await wait(80);
+    }
+    away();
+    await until(3.3);
+    mark("voice");
+    const mic = $("#mic");
+    point(mic);
+    mic.classList.add("on");
+    mic.setAttribute("aria-pressed", "true");
+    const pop = $("#voice-pop");
+    const r = mic.getBoundingClientRect();
+    pop.style.left = `${r.left + r.width / 2}px`;
+    pop.style.top = `${r.bottom + 12}px`;
+    pop.hidden = false;
+    await until(6.4);
+    const budget = [...document.querySelectorAll("#budget-seg [role=radio]")][2];
+    point(budget);
+    budget?.click();
+    await until(8.8);
+    away();
+    pop.hidden = true;
+    mic.classList.remove("on");
+    mic.setAttribute("aria-pressed", "false");
+    await until(10);
+    mark("film");
+    state.running = true;
+    startRun(text, "Gemini · Veo", "robohub-q120");
+    $("#grid").hidden = true;
+    const bench = $("#bench");
+    bench.hidden = false;
+    const film = $("#bench-film");
+    film.src = "runs/put-the-red-block-in-the-bowl/clips/v04.mp4";
+    film.play().catch(() => {});
+    $("#bench-hand-cap").textContent = "Gemini · a hand doing the task";
+    bench.scrollIntoView({ behavior: "smooth", block: "start" });
+    await until(18);
+    mark("db");
+    ["<b>edge</b> open_task", "<b>insert</b> tasks", "<b>insert</b> demonstrations", "<b>compute</b> gates started", "<b>vector</b> pinch path · 1536", "<b>realtime</b> gate_audit"].forEach((html, i) => {
+      until(18.3 + i * 2.6).then(() => log(html));
+    });
+    for (let i = 0; i < gates.length; i++) {
+      await until(19 + i * 0.72);
+      gateHost.children[i].classList.add("on", "hot");
+      if (i) gateHost.children[i - 1].classList.remove("hot");
+      $("#db-count").textContent = `${i + 1} / 21`;
+    }
+    await until(36);
+    mark("fit");
+    $("#bench-db").hidden = true;
+    $("#bench-armbox").hidden = false;
+    $("#bench-hand-cap").textContent = "Hand · pinch tracked";
+    const track = $("#bench-track");
+    const arm = $("#bench-arm");
+    let fitOn = true;
+    const fitT0 = performance.now();
+    const paintFit = () => {
+      if (!fitOn) return;
+      drawFit(track, arm, (performance.now() - fitT0) / 1000);
+      requestAnimationFrame(paintFit);
+    };
+    requestAnimationFrame(paintFit);
+    await until(50);
+    mark("arm");
+    fitOn = false;
+    track.getContext("2d")?.clearRect(0, 0, track.width, track.height);
+    $("#bench-armbox").hidden = true;
+    const simBox = $("#bench-sim");
+    simBox.hidden = false;
+    $("#bench-hand-cap").textContent = "The hand";
+    if (window.RoboHubPreview) {
+      const sim = RoboHubPreview.mount(text);
+      simBox.append(sim.canvas);
+      sim.ready.catch(() => {});
+    }
+    await until(62);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    await until(63.4);
+    point($("#pay"));
+    $("#pay").click();
+    await until(66.2);
+    away();
+    await until(74);
+  }
+
   ready.then(async () => {
+    if (qs.get("demo") === "1") { demoTour(); return; }
     if (qs.get("preload") === "0" || !state.recorded || state.running) return;
     state.running = true;
     try { await replay(null, true); } finally { state.running = false; }
